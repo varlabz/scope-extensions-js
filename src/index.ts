@@ -9,7 +9,7 @@ export class Wrapper<T> {
      * Get the value wrapped by `this` wrapper.
      * @returns the wrapped value, whose type is `T`
      */
-    item(): T {
+    get item(): T {
         return this.value
     }
 
@@ -96,11 +96,8 @@ export class Wrapper<T> {
     }
 }
 
-export function use<T>(value: T | undefined): Wrapper<T> | undefined {
-    if (value !== undefined) return new Wrapper<T>(value)
+export function use<T>(value: T | undefined | null): Wrapper<T> | undefined {
+    if (value !== undefined && value !== null) return new Wrapper<T>(value)
 }
-
-// @ts-ignore
-if (typeof window === "object") window.use = use
 
 export default use

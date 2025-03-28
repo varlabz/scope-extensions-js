@@ -1,43 +1,43 @@
-import "../src/prototype";
+import use from "../src/index";
 
 describe("let", () => {
     test("works with object", () => {
         const obj = { name: "Daniel", age: 30 };
-        obj.let(it => expect(it).toBeInstanceOf(Object));
+        use(obj)?.let(it => expect(it).toBeInstanceOf(Object));
     });
     test("works with number", () => {
         const number = 5;
-        number.let(it => expect(typeof it).toBe("number"));
-        number.let(it => expect(it).toBe(number));
+        use(number)?.let(it => expect(typeof it).toBe("number"));
+        use(number)?.let(it => expect(it).toBe(number));
     });
     test("works with string", () => {
         const string = "Hello world";
-        string.let(it => expect(typeof it).toBe("string"));
-        string.let(it => expect(it).toBe(string));
+        use(string)?.let(it => expect(typeof it).toBe("string"));
+        use(string)?.let(it => expect(it).toBe(string));
     });
     test("works with boolean", () => {
         const boolean = true;
-        boolean.let(it => expect(typeof it).toBe("boolean"));
-        boolean.let(it => expect(it).toBe(boolean));
+        use(boolean)?.let(it => expect(typeof it).toBe("boolean"));
+        use(boolean)?.let(it => expect(it).toBe(boolean));
     });
     test("returns value", () => {
         const obj = { name: "Daniel", age: 30 };
-        const value = obj.let(it => it.age);
+        const value = use(obj)?.let(it => it.age)?.item;
         expect(value).toBe(30);
     });
     test("works with nullable", () => {
         const str: string | null = "Hello world";
-        const value = str?.let(it => it.split(" ")[0]);
+        const value = use(str)?.let(it => it.split(" ")[0])?.item;
         expect(value).toBe("Hello");
     });
     test("fails with null", () => {
         const str: string | null = null;
-        const value = str?.let(it => it.split(" ")[0]);
+        const value = use<string>(str)?.let(it => it.split(" ")[0])?.item;
         expect(value).toBeUndefined();
     });
     test("fails with undefined", () => {
         const str: string | undefined = undefined;
-        const value = str?.let(it => it.split(" ")[0]);
+        const value = use<string>(str)?.let(it => it.split(" ")[0])?.item;
         expect(value).toBeUndefined();
     });
 });
@@ -45,54 +45,54 @@ describe("let", () => {
 describe("also", () => {
     test("works with object", () => {
         const obj = { name: "Daniel", age: 30 };
-        obj.also(it => expect(it).toBeInstanceOf(Object));
+        use(obj)?.also(it => expect(it).toBeInstanceOf(Object));
     });
     test("works with number", () => {
         const number = 5;
-        number.also(it => expect(typeof it).toBe("number"));
-        number.also(it => expect(it).toBe(number));
+        use(number)?.also(it => expect(typeof it).toBe("number"));
+        use(number)?.also(it => expect(it).toBe(number));
     });
     test("works with string", () => {
         const string = "Hello world";
-        string.also(it => expect(typeof it).toBe("string"));
-        string.also(it => expect(it).toBe(string));
+        use(string)?.also(it => expect(typeof it).toBe("string"));
+        use(string)?.also(it => expect(it).toBe(string));
     });
     test("works with boolean", () => {
         const boolean = true;
-        boolean.also(it => expect(typeof it).toBe("boolean"));
-        boolean.also(it => expect(it).toBe(boolean));
+        use(boolean)?.also(it => expect(typeof it).toBe("boolean"));
+        use(boolean)?.also(it => expect(it).toBe(boolean));
     });
     test("returns instance", () => {
         const obj = { name: "Daniel", age: 30 };
-        const value = obj.also(it => it.name);
+        const value = use(obj)?.also(it => it.name).item;
         expect(value).toBe(obj);
     });
     test("modifies value", () => {
         const obj = { name: "Daniel", age: 30 };
-        const value = obj.also(it => it.age = 40);
-        expect(value).toBe(obj);
-        expect(value.age).toBe(40);
+        const value = use(obj)?.also(it => it.age = 40);
+        expect(value?.item).toBe(obj);
+        expect(value?.item.age).toBe(40);
     });
     test("works with nullable", () => {
         const obj: object | null = { name: "Daniel", age: 30 };
-        const value = obj?.also(it => it["age"] = 40);
+        const value = use(obj)?.also(it => it["age"] = 40).item;
         expect(value).toBe(obj);
         expect(value?.["age"]).toBe(40);
     });
     test("fails with null", () => {
         const obj: object | null = null;
-        const value = obj?.also(it => it["age"] = 40);
+        const value = use<object>(obj)?.also(it => it["age"] = 40).item;
         expect(value).toBeUndefined();
     });
     test("fails with undefined", () => {
         const obj: object | undefined = undefined;
-        const value = obj?.also(it => it["age"] = 40);
+        const value = use<object>(obj)?.also(it => it["age"] = 40).item;
         expect(value).toBeUndefined();
     });
     test("retains with null", () => {
         const str: string | null = null;
         const obj = { name: "Daniel", age: 30 };
-        str?.also(it => obj.name = it);
+        use<string>(str)?.also(it => obj.name = it).item;
         expect(obj.name).toBe("Daniel");
     });
 });
@@ -100,63 +100,63 @@ describe("also", () => {
 describe("run", () => {
     test("works with object", () => {
         const obj = { name: "Daniel", age: 30 };
-        obj.run(function() {
+        use(obj)?.run(function() {
             expect(this).toBeInstanceOf(Object);
         });
     });
     test("works with number", () => {
         const number = 5;
-        number.run(function() {
+        use(number)?.run(function() {
             expect(typeof this).toBe("number");
         });
-        number.run(function() {
+        use(number)?.run(function() {
             expect(this).toBe(number);
         });
     });
     test("works with string", () => {
         const string = "Hello world";
-        string.run(function() {
+        use(string)?.run(function() {
             expect(typeof this).toBe("string");
         });
-        string.run(function() {
+        use(string)?.run(function() {
             expect(this).toBe(string);
         });
     });
     test("works with boolean", () => {
         const boolean = true;
-        boolean.run(function() {
+        use(boolean)?.run(function() {
             expect(typeof this).toBe("boolean");
         });
-        boolean.run(function() {
+        use(boolean)?.run(function() {
             expect(this).toBe(boolean);
         });
     });
     test("returns value", () => {
         const obj = { name: "Daniel", age: 30 };
-        const value = obj.run(function() {
+        const value = use(obj)?.run(function() {
             return this.age;
-        });
+        })?.item;
         expect(value).toBe(30);
     });
     test("works with nullable", () => {
         const str: string | null = "Hello world";
-        const value = str?.run(function() {
+        const value = use(str)?.run(function() {
             return this.split(" ")[0];
-        });
+        })?.item;
         expect(value).toBe("Hello");
     });
     test("fails with null", () => {
         const str: string | null = null;
-        const value = str?.run(function() {
+        const value = use<string>(str)?.run(function() {
             return this.split(" ")[0];
-        });
+        })?.item;
         expect(value).toBeUndefined();
     });
     test("fails with undefined", () => {
         const str: string | undefined = undefined;
-        const value = str?.run(function() {
+        const value = use<string>(str)?.run(function() {
             return this.split(" ")[0];
-        });
+        })?.item;
         expect(value).toBeUndefined();
     });
 });
@@ -164,78 +164,78 @@ describe("run", () => {
 describe("apply", () => {
     test("works with object", () => {
         const obj = { name: "Daniel", age: 30 };
-        obj.apply(function() {
+        use(obj)?.apply(function() {
             expect(this).toBeInstanceOf(Object);
         });
     });
     test("works with number", () => {
         const number = 5;
-        number.apply(function() {
+        use(number)?.apply(function() {
             expect(typeof this).toBe("number");
         });
-        number.apply(function() {
+        use(number)?.apply(function() {
             expect(this).toBe(number);
         });
     });
     test("works with string", () => {
         const string = "Hello world";
-        string.apply(function() {
+        use(string)?.apply(function() {
             expect(typeof this).toBe("string");
         });
-        string.apply(function() {
+        use(string)?.apply(function() {
             expect(this).toBe(string);
         });
     });
     test("works with boolean", () => {
         const boolean = true;
-        boolean.apply(function() {
+        use(boolean)?.apply(function() {
             expect(typeof this).toBe("boolean");
         });
-        boolean.apply(function() {
+        use(boolean)?.apply(function() {
             expect(this).toBe(boolean);
         });
     });
     test("returns instance", () => {
         const obj = { name: "Daniel", age: 30 };
-        const value = obj.apply(function() {
+        const value = use(obj)?.apply(function() {
             return this.name;
-        });
+        }).item;
         expect(value).toBe(obj);
     });
     test("modifies value", () => {
         const obj = { name: "Daniel", age: 30 };
-        const value = obj.apply(function() {
+        const value = use(obj)?.apply(function() {
             this.age = 40;
         });
-        expect(value).toBe(obj);
-        expect(value.age).toBe(40);
+        expect(value?.item).toBe(obj);
+        expect(value?.item.age).toBe(40);
     });
     test("works with nullable", () => {
         const obj: object | null = { name: "Daniel", age: 30 };
-        const value = obj?.apply(function() {
+        const value = use(obj)?.apply(function() {
             this["age"] = 40;
-        });
+        }).item;
         expect(value).toBe(obj);
         expect(value?.["age"]).toBe(40);
     });
     test("fails with null", () => {
         const obj: object | null = null;
-        const value = obj?.apply(function() {
+        const value = use<object>(obj)?.apply(function() {
             this["age"] = 40;
-        });
+        }).item;
         expect(value).toBeUndefined();
     });
     test("fails with undefined", () => {
         const obj: object | null = null;
-        const value = obj?.apply(function() {
+        const value = use<object>(obj)?.apply(function() {
             this["age"] = 40;
-        });
+        }).item;
         expect(value).toBeUndefined();
     });
     test("retains with null", () => {
         const str: string | null = null;
         const obj = { name: "Daniel", age: 30 };
-        str?.apply(function() {
+        use<string>(str)?.apply(function() {
             obj.name = this;
         });
         expect(obj.name).toBe("Daniel");
@@ -245,66 +245,66 @@ describe("apply", () => {
 describe("takeIf", () => {
     test("works with object", () => {
         const obj = { name: "Daniel", age: 30 };
-        obj.takeIf(it => !!expect(it).toBeInstanceOf(Object));
+        use(obj)?.takeIf(it => !!expect(it).toBeInstanceOf(Object));
     });
     test("works with number", () => {
         const number = 5;
-        number.takeIf(it => !!expect(typeof it).toBe("number"));
-        number.takeIf(it => !!expect(it).toBe(number));
+        use(number)?.takeIf(it => !!expect(typeof it).toBe("number"));
+        use(number)?.takeIf(it => !!expect(it).toBe(number));
     });
     test("works with string", () => {
         const string = "Hello world";
-        string.takeIf(it => !!expect(typeof it).toBe("string"));
-        string.takeIf(it => !!expect(it).toBe(string));
+        use(string)?.takeIf(it => !!expect(typeof it).toBe("string"));
+        use(string)?.takeIf(it => !!expect(it).toBe(string));
     });
     test("works with boolean", () => {
         const boolean = true;
-        boolean.takeIf(it => !!expect(typeof it).toBe("boolean"));
-        boolean.takeIf(it => expect(it).toBe(boolean));
+        use(boolean)?.takeIf(it => !!expect(typeof it).toBe("boolean"));
+        use(boolean)?.takeIf(it => expect(it).toBe(boolean));
     });
     test("returns instance if true", () => {
         const obj = { name: "Daniel", age: 30 };
-        const value = obj.takeIf(it => it.age < 40);
+        const value = use(obj)?.takeIf(it => it.age < 40)?.item;
         expect(value).toBe(obj);
     });
     test("returns undefined if false", () => {
         const obj = { name: "Daniel", age: 30 };
-        const value = obj.takeIf(it => it.age > 40);
+        const value = use(obj)?.takeIf(it => it.age > 40)?.item;
         expect(value).toBeUndefined();
     });
     test("true without predicate", () => {
         const boolean = true;
-        const value = boolean.takeIf();
+        const value = use(boolean)?.takeIf(it => it)?.item;
         expect(value).toBe(boolean);
         expect(value).toBe(true);
     });
     test("false without predicate", () => {
         const boolean = false;
-        const value = boolean.takeIf();
+        const value = use(boolean)?.takeIf(it => it)?.item;
         expect(value).toBeUndefined();
     });
     test("modifies value", () => {
         const obj = { name: "Daniel", age: 30 };
-        const value = obj.takeIf(it => {
+        const value = use(obj)?.takeIf(it => {
             it.name = "George";
             return it.age < 40;
         });
-        expect(value).toBe(obj);
-        expect(value.name).toBe("George");
+        expect(value?.item).toBe(obj);
+        expect(value?.item.name).toBe("George");
     });
     test("works with nullable", () => {
         const obj: object | null = { name: "Daniel", age: 30 };
-        const value = obj?.takeIf(it => it["age"] < 40);
+        const value = use(obj)?.takeIf(it => it["age"] < 40)?.item;
         expect(value).toBe(obj);
     });
     test("fails with null", () => {
         const obj: object | null = null;
-        const value = obj?.takeIf(it => it["age"] < 40);
+        const value = use<object>(obj)?.takeIf(it => it["age"] < 40)?.item;
         expect(value).toBeUndefined();
     });
     test("fails with undefined", () => {
         const obj: object | undefined = undefined;
-        const value = obj?.takeIf(it => it["age"] < 40);
+        const value = use<object>(obj)?.takeIf(it => it["age"] < 40)?.item;
         expect(value).toBeUndefined();
     });
 });
@@ -312,70 +312,70 @@ describe("takeIf", () => {
 describe("takeUnless", () => {
     test("works with object", () => {
         const obj = { name: "Daniel", age: 30 };
-        obj.takeUnless(it => !!expect(it).toBeInstanceOf(Object));
+        use(obj)?.takeUnless(it => !!expect(it).toBeInstanceOf(Object));
     });
     test("works with number", () => {
         const number = 5;
-        number.takeUnless(it => !!expect(typeof it).toBe("number"));
+        use(number)?.takeUnless(it => !!expect(typeof it).toBe("number"));
     });
     test("works with number", () => {
         const number = 5;
-        number.takeUnless(it => !!expect(typeof it).toBe("number"));
-        number.takeUnless(it => !!expect(it).toBe(number));
+        use(number)?.takeUnless(it => !!expect(typeof it).toBe("number"));
+        use(number)?.takeUnless(it => !!expect(it).toBe(number));
     });
     test("works with string", () => {
         const string = "Hello world";
-        string.takeUnless(it => !!expect(typeof it).toBe("string"));
-        string.takeUnless(it => !!expect(it).toBe(string));
+        use(string)?.takeUnless(it => !!expect(typeof it).toBe("string"));
+        use(string)?.takeUnless(it => !!expect(it).toBe(string));
     });
     test("works with boolean", () => {
         const boolean = true;
-        boolean.takeUnless(it => !!expect(typeof it).toBe("boolean"));
-        boolean.takeUnless(it => expect(it).toBe(boolean));
+        use(boolean)?.takeUnless(it => !!expect(typeof it).toBe("boolean"));
+        use(boolean)?.takeUnless(it => expect(it).toBe(boolean));
     });
     test("returns undefined if true", () => {
         const obj = { name: "Daniel", age: 30 };
-        const value = obj.takeUnless(it => it.age < 40);
+        const value = use(obj)?.takeUnless(it => it.age < 40)?.item;
         expect(value).toBeUndefined();
     });
     test("returns instance if false", () => {
         const obj = { name: "Daniel", age: 30 };
-        const value = obj.takeUnless(it => it.age > 40);
+        const value = use(obj)?.takeUnless(it => it.age > 40)?.item;
         expect(value).toBe(obj);
     });
     test("true without predicate", () => {
         const boolean = true;
-        const value = boolean.takeUnless();
+        const value = use(boolean)?.takeUnless(it => it)?.item;
         expect(value).toBeUndefined();
     });
     test("false without predicate", () => {
         const boolean = false;
-        const value = boolean.takeUnless();
+        const value = use(boolean)?.takeUnless(it => it)?.item;
         expect(value).toBe(boolean);
         expect(value).toBe(false);
     });
     test("modifies value", () => {
         const obj = { name: "Daniel", age: 30 };
-        const value = obj.takeUnless(it => {
+        const value = use(obj)?.takeUnless(it => {
             it.name = "George";
             return it.age < 40;
-        });
+        })?.item;
         expect(value).toBeUndefined();
         expect(obj.name).toBe("George");
     });
     test("works with nullable", () => {
         const obj: object | null = { name: "Daniel", age: 30 };
-        const value = obj?.takeUnless(it => it["age"] > 40);
+        const value = use(obj)?.takeUnless(it => it["age"] > 40)?.item;
         expect(value).toBe(obj);
     });
     test("fails with null", () => {
         const obj: object | null = null;
-        const value = obj?.takeUnless(it => it["age"] > 40);
+        const value = use<object>(obj)?.takeUnless(it => it["age"] > 40)?.item;
         expect(value).toBeUndefined();
     });
     test("fails with undefined", () => {
         const obj: object | undefined = undefined;
-        const value = obj?.takeUnless(it => it["age"] > 40);
+        const value = use(obj)?.takeUnless(it => it!["age"] > 40)?.item;
         expect(value).toBeUndefined();
     });
 });
