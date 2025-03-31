@@ -1,6 +1,6 @@
 {
   "name": "@varlabz/scope-extensions-js",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "description": "Package for using Kotlin's Scope Function Extensions on JavaScript and TypeScript",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

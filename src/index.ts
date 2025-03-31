@@ -1,5 +1,5 @@
 export class Wrapper<T> {
-    value: T
+    private readonly value: T
 
     constructor(value: T) {
         this.value = value
