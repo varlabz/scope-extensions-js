@@ -74,19 +74,19 @@ describe("also", () => {
         expect(value?.item.age).toBe(40);
     });
     test("works with nullable", () => {
-        const obj: object | null = { name: "Daniel", age: 30 };
+        const obj: Record<string, any> | null = { name: "Daniel", age: 30 };
         const value = use(obj)?.also(it => it["age"] = 40).item;
         expect(value).toBe(obj);
         expect(value?.["age"]).toBe(40);
     });
     test("fails with null", () => {
-        const obj: object | null = null;
-        const value = use<object>(obj)?.also(it => it["age"] = 40).item;
+        const obj: Record<string, any> | null = null;
+        const value = use<Record<string, any>>(obj)?.also(it => it["age"] = 40).item;
         expect(value).toBeUndefined();
     });
     test("fails with undefined", () => {
-        const obj: object | undefined = undefined;
-        const value = use<object>(obj)?.also(it => it["age"] = 40).item;
+        const obj: Record<string, any> | undefined = undefined;
+        const value = use<Record<string, any>>(obj)?.also(it => it["age"] = 40).item;
         expect(value).toBeUndefined();
     });
     test("retains with null", () => {
@@ -211,7 +211,7 @@ describe("apply", () => {
         expect(value?.item.age).toBe(40);
     });
     test("works with nullable", () => {
-        const obj: object | null = { name: "Daniel", age: 30 };
+        const obj: Record<string, any> | null = { name: "Daniel", age: 30 };
         const value = use(obj)?.apply(function() {
             this["age"] = 40;
         }).item;
@@ -219,15 +219,15 @@ describe("apply", () => {
         expect(value?.["age"]).toBe(40);
     });
     test("fails with null", () => {
-        const obj: object | null = null;
-        const value = use<object>(obj)?.apply(function() {
+        const obj: Record<string, any> | null = null;
+        const value = use<Record<string, any>>(obj)?.apply(function() {
             this["age"] = 40;
         }).item;
         expect(value).toBeUndefined();
     });
     test("fails with undefined", () => {
-        const obj: object | null = null;
-        const value = use<object>(obj)?.apply(function() {
+        const obj: Record<string, any> | null = null;
+        const value = use<Record<string, any>>(obj)?.apply(function() {
             this["age"] = 40;
         }).item;
         expect(value).toBeUndefined();
@@ -293,18 +293,18 @@ describe("takeIf", () => {
         expect(value?.item.name).toBe("George");
     });
     test("works with nullable", () => {
-        const obj: object | null = { name: "Daniel", age: 30 };
+        const obj: Record<string, any> | null = { name: "Daniel", age: 30 };
         const value = use(obj)?.takeIf(it => it["age"] < 40)?.item;
         expect(value).toBe(obj);
     });
     test("fails with null", () => {
-        const obj: object | null = null;
-        const value = use<object>(obj)?.takeIf(it => it["age"] < 40)?.item;
+        const obj: Record<string, any> | null = null;
+        const value = use<Record<string, any>>(obj)?.takeIf(it => it["age"] < 40)?.item;
         expect(value).toBeUndefined();
     });
     test("fails with undefined", () => {
-        const obj: object | undefined = undefined;
-        const value = use<object>(obj)?.takeIf(it => it["age"] < 40)?.item;
+        const obj: Record<string, any> | undefined = undefined;
+        const value = use<Record<string, any>>(obj)?.takeIf(it => it["age"] < 40)?.item;
         expect(value).toBeUndefined();
     });
 });
@@ -364,17 +364,17 @@ describe("takeUnless", () => {
         expect(obj.name).toBe("George");
     });
     test("works with nullable", () => {
-        const obj: object | null = { name: "Daniel", age: 30 };
+        const obj: Record<string, any> | null = { name: "Daniel", age: 30 };
         const value = use(obj)?.takeUnless(it => it["age"] > 40)?.item;
         expect(value).toBe(obj);
     });
     test("fails with null", () => {
-        const obj: object | null = null;
-        const value = use<object>(obj)?.takeUnless(it => it["age"] > 40)?.item;
+        const obj: Record<string, any> | null = null;
+        const value = use<Record<string, any>>(obj)?.takeUnless(it => it["age"] > 40)?.item;
         expect(value).toBeUndefined();
     });
     test("fails with undefined", () => {
-        const obj: object | undefined = undefined;
+        const obj: Record<string, any> | undefined = undefined;
         const value = use(obj)?.takeUnless(it => it!["age"] > 40)?.item;
         expect(value).toBeUndefined();
     });

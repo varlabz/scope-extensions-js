@@ -1,5 +1,5 @@
 export declare class Wrapper<T> {
-    value: T;
+    private readonly value;
     constructor(value: T);
     /**
      * Get the value wrapped by `this` wrapper.
