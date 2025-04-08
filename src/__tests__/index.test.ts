@@ -379,3 +379,108 @@ describe("takeUnless", () => {
         expect(value).toBeUndefined();
     });
 });
+
+import { useAsync } from "../index";
+
+describe("async let", () => {
+    test("works with object", async () => {
+        const obj = { name: "Daniel", age: 30 };
+        useAsync(obj)?.let(it => expect(it).toBeInstanceOf(Object));
+    });
+
+    test("returns value", async () => {
+        const obj = { name: "Daniel", age: 30 };
+        const result = (await useAsync(obj)?.let(it => it.age))?.value;
+        expect(result).toBe(30);
+    });
+
+    test("works with nullable", async () => {
+        const str: string | null = "Hello world";
+        const result = (await useAsync(str)?.let(it => it.split(" ")[0]))?.value;
+        expect(result).toBe("Hello");
+    });
+
+    test("fails with null", async () => {
+        const str: string | null = null;
+        const result = (await useAsync<string>(str)?.let(it => it.split(" ")[0]))?.value;
+        expect(result).toBeUndefined();
+    });
+});
+
+describe("async also", () => {
+    test("returns instance", async () => {
+        const obj = { name: "Daniel", age: 30 };
+        const result = (await useAsync(obj)?.also(it => it.name))?.value;
+        expect(result).toBe(obj);
+    });
+
+    test("modifies value", async () => {
+        const obj = { name: "Daniel", age: 30 };
+        const result = (await useAsync(obj)?.also(it => { it.age = 40; }))?.value;
+        expect(result).toBe(obj);
+        expect(result?.age).toBe(40);
+    });
+});
+
+describe("async run", () => {
+    test("works with object", async () => {
+        const obj = { name: "Daniel", age: 30 };
+        await useAsync(obj)?.run(async function() {
+            expect(this).toBeInstanceOf(Object);
+        });
+    });
+
+    test("returns value", async () => {
+        const obj = { name: "Daniel", age: 30 };
+        const value = (await useAsync(obj)?.run(async function() {
+            return this.age;
+        }))?.value;
+        expect(value).toBe(30);
+    });
+});
+
+describe("async apply", () => {
+    test("works with object", async () => {
+        const obj = { name: "Daniel", age: 30 };
+        await useAsync(obj)?.apply(async function() {
+            expect(this).toBeInstanceOf(Object);
+        });
+    });
+
+    test("modifies value", async () => {
+        const obj = { name: "Daniel", age: 30 };
+        const value = await useAsync(obj)?.apply(async function() {
+            this.age = 40;
+        });
+        expect(value?.value).toBe(obj);
+        expect(value?.value.age).toBe(40);
+    });
+});
+
+describe("async takeIf", () => {
+    test("returns instance if true", async () => {
+        const obj = { name: "Daniel", age: 30 };
+        const result = (await useAsync(obj)?.takeIf(it => it.age < 40))?.value;
+        expect(result).toBe(obj);
+    });
+
+    test("returns undefined if false", async () => {
+        const obj = { name: "Daniel", age: 30 };
+        const result = await useAsync(obj)?.takeIf(it => it.age > 40);
+        expect(result).toBeUndefined();
+    });
+});
+
+describe("async takeUnless", () => {
+    test("returns undefined if true", async () => {
+        const obj = { name: "Daniel", age: 30 };
+        const result = await useAsync(obj)?.takeUnless(it => it.age < 40);
+        expect(result).toBeUndefined();
+    });
+
+    test("returns instance if false", async () => {
+        const obj = { name: "Daniel", age: 30 };
+        const result = (await useAsync(obj)?.takeUnless(it => it.age > 40))?.value;
+        expect(result).toBe(obj);
+    });
+});
